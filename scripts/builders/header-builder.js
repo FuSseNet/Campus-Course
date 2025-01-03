@@ -1,6 +1,5 @@
 import router from "../router.js"
-const headerBuilder = async (userData) => {
-    const {user, login, logout} = userData;
+const headerBuilder = async (user, logout) => {
 
     var {isAdmin, isStudent, isTeacher} = user.roles;
     var courseGrops = $('<li class="nav-item"><a class="nav-link" href="/groups" >Группы курсов</a></li>')

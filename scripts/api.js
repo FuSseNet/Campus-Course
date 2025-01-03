@@ -19,7 +19,9 @@ const UrlBuilder = {
         createCourse:(id) => `${UrlBuilder.root}/groups/${id}`,
     },
     courses:{
-        detail:(id) => `${UrlBuilder.root}/courses/${id}/details`,
+        details:(id) => `${UrlBuilder.root}/courses/${id}/details`,
+        my:() => `${UrlBuilder.root}/courses/my`,
+        editCourse:(id) =>`${UrlBuilder.root}/courses/${id}`
     }
 }
 

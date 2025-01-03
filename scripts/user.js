@@ -1,4 +1,5 @@
 import UrlBuilder from "./api.js";
+import modals from "./modals.js";
 const userState = async () =>{
     const user = {
         email: null,
@@ -135,6 +136,29 @@ const userState = async () =>{
         });
     }
 
+    const profileEdit = async (data) => {
+        const response = await fetch(UrlBuilder.account.profile(), {
+            method: 'PUT',
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization': 'Bearer ' + user.token,
+            },
+            body:JSON.stringify(data),
+        }).then(response => {
+            if (response.ok) {
+                return response.json()
+            }else{
+                throw new Error('Unauthorized');
+            }
+        }).then(response =>{
+            user.birthday = new Date(data.birthDate);
+            user.fullName = data.fullName;
+            modals.modal('Редактирование профиля выполнено успешно!', 'Редактирование профиля', 'success')
+        }).catch(error => {
+            throw new Error(error);
+        });
+    }
+
     const init = async () =>{
         const token = localStorage.getItem('token');
         if (token){
@@ -149,7 +173,8 @@ const userState = async () =>{
         user,
         registration,
         login,
-        logout
+        logout,
+        profileEdit
     }
 }
 

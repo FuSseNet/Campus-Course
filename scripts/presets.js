@@ -84,7 +84,7 @@ const add = (title = 'Создать', func, inputList = []) =>{
 
     let frm = $('<form>',{
         class:'w-100 needs-validation',
-        id:'group-edit-form',
+        id:'edit-form',
         noValidate:true
     })
 
@@ -93,7 +93,7 @@ const add = (title = 'Создать', func, inputList = []) =>{
     let submit = submitBtn('Создать')
 
     submit.submitBtn.on('click', function(){
-        $('#group-edit-form').submit()
+        $('#edit-form').submit()
     })
 
     let modalClose;
@@ -116,7 +116,7 @@ const add = (title = 'Создать', func, inputList = []) =>{
           })
       }
       else{
-          e.target.classList.add('was-validated')
+          event.target.classList.add('was-validated')
       }
     })
     btn.on('click', () =>{
@@ -126,9 +126,10 @@ const add = (title = 'Создать', func, inputList = []) =>{
             'default',
             [submit.submitBtn],
             () =>{
-                $('#group-edit-form').submit()
+                $('#edit-form').submit()
             }
         )
+        presets.components.initNote()
     })
     return btn
 }
@@ -141,14 +142,14 @@ const edit = (inputList = [], func) =>{
 
     let frm = $('<form>',{
         class:'w-100 needs-validation',
-        id:'group-edit-form',
+        id:'edit-form',
         noValidate:true
     })
     frm.append(inputList)
 
     let submit = submitBtn('Сохранить')
     submit.submitBtn.on('click', function(){
-        $('#group-edit-form').submit()
+        $('#edit-form').submit()
     })
 
     let modalClose;
@@ -182,8 +183,10 @@ const edit = (inputList = [], func) =>{
             'default',
             [submit.submitBtn],
             () =>{
-                $('#group-edit-form').submit()
+                $('#edit-form').submit()
             })
+
+        presets.components.initNote()
     })
     return btn
 }
@@ -249,7 +252,7 @@ const summernote = (title, options) =>{
         for:`${title}-summernote`,
         html:title
     })
-    let summernote = $('textarea',{
+    let summernote = $('<textarea>',{
         class:'sumernote',
         id:`${title}-sumernote`,
         ...options
@@ -259,7 +262,7 @@ const summernote = (title, options) =>{
     return cont
 }
 
-const optionInput = (title, options, attr) =>{
+const optionInput = (title, options, attr, validFeedback = null, invalidFeedback = null) =>{
     let cont = $('<div>',{
         ...attr
     })
@@ -268,24 +271,60 @@ const optionInput = (title, options, attr) =>{
         for:`${title}-opt`,
         html:title
     })
-    let select = $('<select>',{
+    let select = $('<input>',{
         class:'form-control',
         id:`${title}-opt`,
+        list:`datalist-${title}`,
+        ...attr
     })
-    options.forEach((name, id) =>{
+    let valid = (validFeedback) ? $('<div>', {'class' : 'valid-feedback', html: validFeedback}) : null;
+    let invalid = (invalidFeedback) ? $('<div>', {'class' : 'invalid-feedback', html: invalidFeedback}) : null;
+    let data = $('<datalist>',{
+        id:`datalist-${title}`
+    })
+
+    options.forEach((item)=>{
         let opt = $('<option>',{
-            value:id,
-            label:name,
+            value:item.id,
+            label:item.fullName,
             class:'option'
         })
-        select.append(opt)
+        data.append(opt)
     })
-    cont.append(label, select)
+    cont.append(label, select, valid, invalid, data)
     return cont
 }
 
 const initNote = () =>{
     $('.sumernote').summernote()
+}
+
+const textArea = (attr) => {
+    return $('<textarea>', {
+        ...attr,
+        'class': 'form-control',
+    })
+}
+
+const switchBlock = (inputAttr, labelAttr, subclasses = "", additionals = {}) => {
+    let block = $('<div>', {
+        'class': `form-check form-switch ${subclasses}`,
+        ...additionals
+    })
+    let input = $('<input>', {
+        'class': 'form-check-input',
+        type: 'checkbox',
+        role: 'switch',
+        ...inputAttr
+    })
+
+    let label = $('<label>', {
+        'class': 'form-check-label',
+        ...labelAttr
+    })
+
+    block.append([input, label])
+    return block;
 }
 
 const presets = {
@@ -301,7 +340,14 @@ const presets = {
         radioCont,
         summernote,
         initNote,
-        optionInput
+        optionInput,
+        textArea,
+        switchBlock
+    },
+    form:{
+        formReader
     }
 }
+
+
 export default presets

@@ -127,7 +127,7 @@ const getAllUsers = async() =>{
         }
     }).then(response => {
         if (response.ok) {
-            modals.modal('Пользователи получены!', 'Получение всех пользователей', 'success')
+            //modals.modal('Пользователи получены!', 'Получение всех пользователей', 'success')
             return response.json()
         }else{
             throw new Error('Ошибка получения пользователей')

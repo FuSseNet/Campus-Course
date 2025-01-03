@@ -13,26 +13,22 @@ const groupPageBuilder = async(user) =>{
         class:'title mb-3',
         html:`Группа - ${groupName}`,
     })
-    if (user.roles.admin){
-        await groupState.getAllUsers()
-    }
-
-    let createCourseBtn = presets.crud.add('Создать курс', (data) => groupState.createCourse(location.href.split('/')[4], data),
-        [
-            presets.components.inputCont({html:'Название группы'}, {name:'name', minlength:1, type:'text', required:true},null, null, 'Курс с таким именем уже существует'),
-            presets.components.inputCont({html:'Год начала курса'}, {name:'startYear', min:2000, max:2029, required:true, type:'number'}, null, null, null),
-            presets.components.inputCont({html:'Общее количество мест'}, {name:'maximumStudentsCount', min:1, max:200, required:true, type:'number'}, null, null, null),
-            presets.components.radioCont('semester', {}, true, [{title:'Осень', value:'Autumn', subclasses:''}, {title:'Весна', value:'Spring', subclasses:''}], "Семестр"),
-            presets.components.summernote('Требования', {name:'requirements', minLength:1, required:true}),
-            presets.components.summernote('Аннотации', {name:'annotations', minLength:1, required:true}),
-            presets.components.optionInput('Основной преподаватель курса', groupState.group.users, {name:'mainTeacherId', required:true})
-        ]
-    );
-
     cont.append(title)
     if (user.roles.admin){
+        await groupState.getAllUsers()
+        let createCourseBtn = presets.crud.add('Создать курс', (data) => groupState.createCourse(location.href.split('/')[4], data),
+            [
+                presets.components.inputCont({html:'Название курса'}, {name:'name', minlength:1, type:'text', required:true},null, null, 'Курс с таким именем уже существует'),
+                presets.components.inputCont({html:'Год начала курса'}, {name:'startYear', min:2000, max:2029, required:true, type:'number'}, null, null, null),
+                presets.components.inputCont({html:'Общее количество мест'}, {name:'maximumStudentsCount', min:1, max:200, required:true, type:'number'}, null, null, null),
+                presets.components.radioCont('semester', {}, true, [{title:'Осень', value:'Autumn', subclasses:''}, {title:'Весна', value:'Spring', subclasses:''}], "Семестр"),
+                presets.components.summernote('Требования', {name:'requirements', minLength:1, required:true}),
+                presets.components.summernote('Аннотации', {name:'annotations', minLength:1, required:true}),
+                presets.components.optionInput('Основной преподаватель курса', groupState.group.users, {name:'mainTeacherId', required:true})
+            ]
+        );
+
         cont.append(createCourseBtn)
-        presets.components.initNote()
     }
     await groupState.courses(location.href.split('/')[4])
 
@@ -49,7 +45,18 @@ const groupPageBuilder = async(user) =>{
         let head = $('<div>',{
             class:'d-flex justify-content-between',
         })
-        head.append($('<p>',{html:`<strong>${course.name}</strong>`, class:'mb-0'}))
+        let nameLink = $('<a>',{
+            class:'link-light link-underline-opacity-0',
+            href:'#',
+            html:course.name
+        })
+        nameLink.on('click',() =>{
+            router.goto('courses', course.id)
+        })
+        let name = $("<strong>",{
+            html:nameLink
+        })
+        head.append($('<p>',{html:name, class:'mb-0'}))
         let status;
         switch (course.status) {
             case 'Created':

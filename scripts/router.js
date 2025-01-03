@@ -42,6 +42,18 @@ const router = (() => {
                 const match = url.pathname.match(regex);
                 return match[1];
             }
+        },
+        courses:{
+            url: "/courses/",
+            check: (url) => {
+                const regex = /^\/courses\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/;
+                return regex.test(url.pathname);
+            },
+            getId: (url) => {
+                const regex = /^\/courses\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/;
+                const match = url.pathname.match(regex);
+                return match[1];
+            }
         }
     }
 
@@ -55,7 +67,7 @@ const router = (() => {
                     data: nowUrl,
                     key: url,
                 }
-                if (url === 'group') {
+                if (url === 'group' || url === 'courses') {
                     res.id = paths[url].getId(nowUrl)
                     console.log(res)
                 }

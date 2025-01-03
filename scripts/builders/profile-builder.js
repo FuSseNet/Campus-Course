@@ -1,4 +1,6 @@
-const profileBuilder = (user) => {
+import presets from "../presets.js";
+import router from "../router.js";
+const profileBuilder = (user, profileEdit) => {
     var cont = $("<div>", {
         class: 'container'
     })
@@ -43,7 +45,7 @@ const profileBuilder = (user) => {
         class:'form-control',
         type: 'text',
         id: 'fullName',
-        name: 'ФИО',
+        name: 'fullName',
         value:user.fullName
     })
     nameCont.append(Name)
@@ -64,7 +66,7 @@ const profileBuilder = (user) => {
         class:'form-control',
         type: 'Date',
         id: 'birthDate',
-        name: 'date',
+        name: 'birthDate',
         value:user.birthday.getFullYear() + '-' + ("0" + (user.birthday.getMonth() + 1)).slice(-2) + '-' + ("0" + user.birthday.getDate()).slice(-2)
     })
     dateCont.append(bDate)
@@ -73,41 +75,16 @@ const profileBuilder = (user) => {
     var submit = $('<button>',{
         class:'btn btn-primary',
         type:'submit',
-        html:'изменить'
+        html:'Изменить'
     })
-    /*frm.submit(function (event) {
-        event.preventDefault();
-
-        var fullName = $('#fullName').val()
-        var birthDate = new Date($('#birthDate').val()).toISOString()
-        console.log(birthDate)
-        ProfilePut(fullName, birthDate)
-    })*/
     frm.append(nameDiv, emailGroup, dateDiv, submit)
+    frm.on('submit', (event)=>{
+        event.preventDefault();
+        profileEdit(presets.form.formReader(event.target)).then(res =>{
+            router.reload()
+        })
+    })
     cont.append(frm)
     $("#app").append(cont)
-    /*$.ajax({
-        url: UrlBuilder.account.profile(),
-        method: 'get',
-        headers: {
-            "Authorization": "Bearer " + localStorage.getItem('token'),
-            "Content-Type": "application/json"
-        },
-        success: (profile) => {
-            $('#fullName').val(profile.fullName)
-            var d = new Date(profile.birthDate)
-            $('#birthDate').val(d.getFullYear() + '-' + ("0" + (d.getMonth() + 1)).slice(-2) + '-' + ("0" + d.getDate()).slice(-2))
-        },
-        error: (jqXHR, exception) => {
-            console.log(jqXHR.status)
-            if (jqXHR.status === 401) {
-                localStorage.removeItem('token')
-                router.goto('login')
-            }
-            else {
-                console.error(exception)
-            }
-        }
-    })*/
 }
 export default profileBuilder;

@@ -22,7 +22,7 @@ const groupsBuilder = async (user) => {
     groupList = groupState.group.groupList
     groupList.forEach(group => {
         let el = $('<div>',{
-            class:'container border rounded d-block p-3'
+            class:'container d-flex justify-content-between border rounded d-block p-3 '
         })
         let name = $('<a>',{
             html:group.name,
@@ -34,15 +34,17 @@ const groupsBuilder = async (user) => {
         })
         el.append(name)
         if (user.roles.admin){
+            let btnCont = $('<div>')
             let editBtn = presets.crud.edit([
                 presets.components.inputCont(
                     {'for':`edit-group-${group.id}`,'html':`Название группы`},
                         {'type':'text', 'class':'form-control', 'id':`edit-group-${group.id}`,'required': true, 'name':'name'}
                     ,{'class': 'mb-3'},'Регистрация прошла успешно!','Такая группа уже зарегестрирована'
             )], async (data) => {return await groupState.edit(data, group.id)})
-            el.append(editBtn)
+            btnCont.append(editBtn)
             let deleteBtn = presets.crud.deleteBtn(() => groupState.deleteFunc(group.id), () => modals.modal('Группа удалена успешно', 'Группа удалена','success') ,() =>{throw Error()})
-            el.append(deleteBtn)
+            btnCont.append(deleteBtn)
+            el.append(btnCont)
         }
         cont.append(el)
     })
