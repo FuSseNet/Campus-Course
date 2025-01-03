@@ -21,7 +21,8 @@ const UrlBuilder = {
     courses:{
         details:(id) => `${UrlBuilder.root}/courses/${id}/details`,
         my:() => `${UrlBuilder.root}/courses/my`,
-        editCourse:(id) =>`${UrlBuilder.root}/courses/${id}`
+        editCourse:(id) =>`${UrlBuilder.root}/courses/${id}`,
+        enterCourse:(id) => `${UrlBuilder.root}/courses/${id}/sign-up`,
     }
 }
 

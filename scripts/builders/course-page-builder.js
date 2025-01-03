@@ -179,7 +179,7 @@ const coursePageBuilder = async (user) =>{
             },
             "btn-success",
             async () => {
-                return fetch(UrlBuilder.courses.course.enterCourse(id),{
+                return fetch(UrlBuilder.courses.enterCourse(course.id),{
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
