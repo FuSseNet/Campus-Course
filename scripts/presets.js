@@ -179,7 +179,7 @@ const edit = (inputList = [], func) =>{
     btn.on('click', () =>{
         modalClose = modals.modal(
             frm,
-            'Редактирование группы',
+            'Редактирование',
             'default',
             [submit.submitBtn],
             () =>{
